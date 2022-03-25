@@ -1,33 +1,33 @@
-# cherry-pick
+# Cherry Pick
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that Cherry-pick Probot
+Virtual Cherry-pick on air.
 
-## Setup
+The cherry-pick works could be tricky, 
+that's the reason we built the project.
 
-```sh
-# Install dependencies
-npm install
+## Permissions
 
-# Run the bot
-npm start
-```
+The "Cherry-pick" App requires:
 
-## Docker
+- Pull Requests - `read/write`
+- Contents - `read/write`, write permission for create Pull Request branch
+- Metadata - `read`, read who have write permission to use the App
 
-```sh
-# 1. Build container
-docker build -t cherry-pick .
+## Usages
 
-# 2. Start container
-docker run -e APP_ID=<app-id> -e PRIVATE_KEY=<pem-value> cherry-pick
-```
+The "Cherry-pick" works as a [GitHub App](https://docs.github.com/en/developers/apps/getting-started-with-apps/about-apps#about-github-apps) 
+to be installed in your org/repos.
 
-## Contributing
+It triggered by command-like comment on a **merged** GitHub Pull Request:
 
-If you have suggestions for how cherry-pick could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
+- `/cherry-pick <branch>` indicates the target branch to cherry-pick into.
 
-For more, check out the [Contributing Guide](CONTRIBUTING.md).
+## Deployment
 
-## License
+The "Cherry-pick" is a GitHub [Probot](https://probot.github.io/) app, 
+and it could be deployed server-less. 
 
-[ISC](LICENSE) © 2022 Mayo <i@shoujo.io>
+We maintain one instance of it on [Vercel](https://vercel.com/).
+
+Due to the GitHub API and Vercel limitations, it could be out-of-resources, 
+but it have no side-effects.
