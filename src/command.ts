@@ -20,7 +20,7 @@ const run = async (accessToken: string, owner: string, repo: string, pullRequest
     repo,
   })
 
-  console.log(`Cherry-picked: https://github.com/${owner}/${repo}/pulls/${cherrypickedPullRequestNumber}`)
+  console.log(`Cherry-picked: https://github.com/${owner}/${repo}/pull/${cherrypickedPullRequestNumber}`)
 }
 
 ;(async () => {
