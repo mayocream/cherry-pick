@@ -1,7 +1,15 @@
 import { ProbotOctokit } from 'probot'
-import { Octokit } from "@octokit/rest"
+import { Octokit } from '@octokit/rest'
 import { cherryPickCommits } from 'github-cherry-pick'
-import { createRef, fetchCommits, fetchRefSha, Ref, RepoName, RepoOwner } from 'shared-github-internals/lib/git'
+import {
+  createRef,
+  deleteRef,
+  fetchCommits,
+  fetchRefSha,
+  Ref,
+  RepoName,
+  RepoOwner,
+} from 'shared-github-internals/lib/git'
 
 const commandRegex = new RegExp('^/cherry-pick (.+)', 'gm') // m flag for multiline
 const extractTargetBranches = (comment: string) => {
@@ -88,7 +96,13 @@ const cherrypickPullRequest = async ({
       repo,
     })
   } catch (error) {
-    throw new Error(`Commits ${JSON.stringify(commits)} could not be cherry-picked on top of ${base}`)
+    await deleteRef({
+      octokit,
+      owner,
+      ref: head,
+      repo,
+    })
+    throw new Error(`Commits of #${pullRequestNumber} could not be cherry-picked on top of ${base}: ${error}`)
   }
 
   const {
