@@ -13,11 +13,13 @@
   ],
   "scripts": {
     "build": "tsc",
+    "cherry-pick": "tsc && node lib/cherry-pick.js",
     "start": "probot run ./lib/index.js",
     "test": "jest"
   },
   "dependencies": {
     "@isomorphic-git/lightning-fs": "^4.4.1",
+    "github-cherry-pick": "^1.1.0",
     "isomorphic-git": "^1.16.0",
     "probot": "^11.0.1"
   },

@@ -1,7 +1,7 @@
 import { Probot } from 'probot'
-import { extractTargetBranches, getPullRequestPatch, userHasWritePermission } from './cherry-pick'
+import { extractTargetBranches, userHasWritePermission } from './cherry-pick'
 
-export = (app: Probot) => {
+const run = (app: Probot) => {
   app.on(['issue_comment.created', 'issue_comment.edited'], async (context) => {
     const pull_number = context.pullRequest().pull_number
     if (!pull_number) {
@@ -17,11 +17,6 @@ export = (app: Probot) => {
     }
 
     const targetBranches = extractTargetBranches(context.payload.comment.body)
-    const patch = await getPullRequestPatch(context.octokit, owner, repo, pull_number)
-
-    if (!patch) {
-      return
-    }
 
     const issueComment = context.issue({
       body: targetBranches[0],
@@ -29,3 +24,5 @@ export = (app: Probot) => {
     await context.octokit.issues.createComment(issueComment)
   })
 }
+
+export default run
