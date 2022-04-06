@@ -52,7 +52,7 @@ const cherrypickPullRequest = async ({
   title?: string
 }): Promise<number> => {
   const {
-    data: { title: originalTitle },
+    data: { title: originalTitle, body: originalBody, merge_commit_sha: mergedCommit },
   } = await octokit.pulls.get({
     owner,
     pull_number: pullRequestNumber,
@@ -60,7 +60,7 @@ const cherrypickPullRequest = async ({
   })
 
   const {
-    body = `Cherry-pick #${pullRequestNumber}.`,
+    body = `Cherry-pick #${pullRequestNumber}. \n\n${originalBody}`,
     head = `cherrypick/${base}-${pullRequestNumber}`,
     title = `[Cherrypick ${base}] ${originalTitle}`,
   } = { body: givenBody, head: givenHead, title: givenTitle }
@@ -72,12 +72,18 @@ const cherrypickPullRequest = async ({
     repo,
   })
 
-  const commits = await fetchCommits({
-    octokit,
-    owner,
-    pullRequestNumber,
-    repo,
-  })
+  // fetch only one commit
+  let commits: string[]
+  if (!mergedCommit) {
+    commits = await fetchCommits({
+      octokit,
+      owner,
+      pullRequestNumber,
+      repo,
+    })
+  } else {
+    commits = [mergedCommit]
+  }
 
   await createRef({
     octokit,
